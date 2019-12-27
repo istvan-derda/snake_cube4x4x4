@@ -7,7 +7,7 @@ using namespace std;
 
 bool solve(const char *rods, Vector3 pos, Vector3 facing, Vector3 *solution);
 
-bool fitRod(Vector3 pos, Vector3 dir, char rod);
+bool placeRod(Vector3 pos, Vector3 dir, char rod);
 
 void removeRod(Vector3 pos, Vector3 dir, char rod);
 
@@ -17,7 +17,6 @@ bool space[3][3][3] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 
 int main() {
 
-    Vector3 facing = Vector3(0, 0, 1);
 
     const char rodsN = 40;
     const char rods[rodsN] = {
@@ -25,11 +24,22 @@ int main() {
             3, 3, 2, -1};
 
 
-    Vector3 pos = Vector3(0, 0, 0);
-
     Vector3 solution[rodsN];
+    Vector3 facing = Vector3(0, 0, 0);
 
-    solve(rods, pos, facing, solution);
+    bool solved = false;
+    for (int x = 0; x < 2; x++) {
+        for (int y = 0; y < 2; y++) {
+            for (int z = 0; y < 2; y++) {
+                Vector3 pos = Vector3(x, y, z);
+                solved = solve(rods, pos, facing, solution);
+                if (solved) {break;}
+            }
+            if (solved){break;}
+        }
+        if (solved){break;}
+    }
+
 
     return 0;
 }
@@ -71,8 +81,19 @@ bool solve(const char *rods, Vector3 pos, Vector3 facing, Vector3 *solution) {
     return false;
 }
 
+bool tryMove(Vector3 dir, const char *rods, Vector3 pos, Vector3 *solution) {
+    bool fits = placeRod(pos, dir, *rods);
+    if (fits) {
+        Vector3 newPos = pos + (dir * *rods);
+        if (solve(rods + 1, newPos, dir, solution)) {
+            return true;
+        } else {
+            removeRod(pos, dir, *rods);
+        }
+    }
+}
 
-bool fitRod(Vector3 pos, Vector3 dir, char rod) {
+bool placeRod(Vector3 pos, Vector3 dir, char rod) {
 
     Vector3 newPos = pos + (dir * rod);
     if (newPos > 3 || newPos < 0) { return false; }
@@ -100,18 +121,6 @@ void removeRod(Vector3 pos, Vector3 dir, char rod) {
             for (int z = pos.z; z <= newPos.z; y += dir.z) {
                 space[x][y][z] = false;
             }
-        }
-    }
-}
-
-bool tryMove(Vector3 dir, const char *rods, Vector3 pos, Vector3 *solution) {
-    bool fits = fitRod(pos, dir, *rods);
-    if (fits) {
-        Vector3 newPos = pos + (dir * *rods);
-        if (solve(rods + 1, newPos, dir, solution)) {
-            return true;
-        } else {
-            removeRod(pos, dir, *rods);
         }
     }
 }
