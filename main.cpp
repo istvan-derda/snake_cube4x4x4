@@ -22,7 +22,7 @@ void removeRod(Vector3 pos, Vector3 dir, char rod);
 
 bool tryMove(Vector3 dir, const char *rods, Vector3 pos, Vector3 *solution);
 
-bool space[4][4][4] = { };
+bool space[4][4][4] = {};
 
 const char rodsN = 39;
 const char rods[rodsN + 1] = {3, 1, 3, 1, 1,
@@ -36,21 +36,22 @@ const char rods[rodsN + 1] = {3, 1, 3, 1, 1,
 
 int main() {
     time_t start = time(0);
-    cout<<ctime(&start)<<endl;
+    cout << "A program for solving THE SNAKE CUBE" << endl << endl;
+    cout << "start: " << ctime(&start);
 
-    cout << "A program for solving THE SNAKE CUBE" << endl;
 
     Vector3 solution[rodsN];
     Vector3 facing = Vector3(0, 0, 0);
 
     bool solved = false;
+    Vector3 pos;
     for (int x = 0; x < 2; x++) {
         for (int y = 0; y < 2; y++) {
             for (int z = 0; y < 2; y++) {
 #ifdef DEBUG
                 startingpos++;
 #endif
-                Vector3 pos = Vector3(x, y, z);
+                pos = Vector3(x, y, z);
                 solved = solve(rods, pos, facing, solution);
 #ifdef DEBUG
                 maxdepth=0;
@@ -63,11 +64,10 @@ int main() {
         if (solved) { break; }
     }
 
-    time_t end = time(0);
-    time_t total = difftime(end, start);
-    cout<<ctime(&total)<<endl;
+    time_t endTime = time(0);
+    cout << "end: " << ctime(&endTime);
 
-    cout << solved << endl;
+    cout << endl << "Start at position " << pos << endl << endl;
     for (int i = 0; i < rodsN; i++) {
         cout << solution[i] << endl;
     }
