@@ -23,16 +23,14 @@ Vector3 Vector3::operator*(int b) {
 
 
 bool Vector3::operator<(int b) {
-    if (this->x > b) return false;
-    if (this->y > b) return false;
-    if (this->z > b) return false;
-    return true;
+    return x < b && y < b && z < b;
 }
 
 bool Vector3::operator>(int b) {
-    if (this->x < b) return false;
-    if (this->y < b) return false;
-    if (this->z < b) return false;
-    return true;
+    return x > b && y > b && z > b;
+}
+
+bool Vector3::operator!=(const Vector3 b) {
+    return b.x != x || b.y != y || b.z != z;
 }
 
